@@ -2,7 +2,7 @@
 
     /**
      * Plugin Name: Steem WP Remote Auth Manager
-     * Plugin URI: 
+     * Plugin URI: https://github.com/steem-wp/steemwp-auth
      * Description: Steem WP remote auth manager
      * Version: 0.0.1
      * Author: Steem WP
@@ -37,8 +37,19 @@
                 }
             } else if ( strtolower( $wp->request ) == $out_url_slug ) {
                 if (isset($_GET['access_token']) and isset($_GET['expires_in'])) {
-                    $sc2_state = $_GET['state'];
-                    exit ( wp_redirect( urldecode($sc2_state) ) );
+                    
+                    $client_url = add_query_arg(
+                        array(
+                        'username' => $_GET['username'],
+                        'access_token' => $_GET['access_token'],
+                        'scope' => $_GET['scope'],
+                        'expires_in' => $_GET['expires_in'],
+                        ),
+                        urldecode($_GET['state'])
+                    )
+                    
+                    exit ( wp_redirect( $client_url ) );
+                    
                 }
             }
         }    
