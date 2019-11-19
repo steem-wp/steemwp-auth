@@ -9,8 +9,22 @@
      * Author URI: http://www.steemwp.com
      */
     
-    add_filter( 'the_posts', 'GENERATE_VIRTUAL_STEEMWP_REMOVE_AUTH_MANAGER_PAGES', -10 );
-    
+    add_action( 'init', 'init' );
+
+    function init() {
+
+       if ( get_option( 'permalink_structure' ) ) {
+            $param = trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+        } else {
+            parse_str( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_QUERY ), $params );
+            $param = ( isset( $params['page_id'] ) ? $params['page_id'] : false );
+        }
+
+        if( $param == 'steemwp/remote-auth-in' ) { // dev: wp/steemwp/remote-auth-in
+            add_filter( 'the_posts', 'GENERATE_VIRTUAL_STEEMWP_REMOVE_AUTH_MANAGER_PAGES' );
+        }
+    }
+
     function GENERATE_VIRTUAL_STEEMWP_REMOVE_AUTH_MANAGER_PAGES ( $posts ) {
         global $wp;
         
@@ -46,7 +60,7 @@
                         'expires_in' => $_GET['expires_in'],
                         ),
                         urldecode($_GET['state'])
-                    )
+                    );
                     
                     exit ( wp_redirect( $client_url ) );
                     
