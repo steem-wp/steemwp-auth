@@ -20,7 +20,7 @@
             $param = ( isset( $params['page_id'] ) ? $params['page_id'] : false );
         }
 
-        if( $param == 'steemwp/remote-auth-in' ) { // dev: wp/steemwp/remote-auth-in
+        if (strpos($param, "steemwp/remote-auth-") === 0) { // dev: wp/steemwp/
             add_filter( 'the_posts', 'GENERATE_VIRTUAL_STEEMWP_REMOVE_AUTH_MANAGER_PAGES' );
         }
     }
